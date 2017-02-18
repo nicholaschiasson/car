@@ -1,3 +1,5 @@
+#!/usr/bin/env car
+
 #include <stdio.h>
 
 int main(int argc, char* argv[])
@@ -7,6 +9,7 @@ int main(int argc, char* argv[])
   if (argc > 1)
   {
     int i = 1;
+
     printf("Printing command-line arguments:\n");
     for (i = 1; i < argc; ++i)
     {
