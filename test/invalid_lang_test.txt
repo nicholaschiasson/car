@@ -1,0 +1,3 @@
+#!/usr/bin/env car
+
+Hello, this is a text file.
