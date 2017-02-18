@@ -5,6 +5,8 @@ SRC_FILE="$1"
 SRC_FILE_BASENAME=`basename "${SRC_FILE}"`
 TEMP_OUT_FILE=$(mktemp -q)
 CXX=gcc
+CXX_OUTPUT_FLAG=-o
+VM=
 
 if test -t 1; then
   ncolors=$(tput colors)
@@ -122,19 +124,39 @@ echo "${NEW_SRC_FILE_CONTENTS}" > "${SRC_FILE}"
 case "${SRC_FILE_BASENAME##*.}" in
   c)
     CXX=gcc
+    CXX_OUTPUT_FLAG=-o
+    VM=
     ;;
   cc | cpp)
     CXX=g++
+    CXX_OUTPUT_FLAG=-o
+    VM=
+    ;;
+  cs)
+    CXX=mcs
+    CXX_OUTPUT_FLAG=-out:
+    VM=mono
+    ;;
+  go)
+    # Using a trick for go, since there is a go command to compile and run, leaving no binaries
+    CXX="go build"
+    CXX_OUTPUT_FLAG="-o "
+    VM=
+    ;;
+  rs)
+    CXX=rustc
+    CXX_OUTPUT_FLAG=-o
+    VM=
     ;;
   *)
     Error 3 "unsupported source file type; no compiler for '${SRC_FILE_BASENAME##*.}' files"
 esac
 
 # Perform compilation
-${CXX} "${SRC_FILE}" -o "${TEMP_OUT_FILE}" || Error 4 "failed to compile '${SRC_FILE}' using ${CXX}"
+${CXX} ${CXX_OUTPUT_FLAG}"${TEMP_OUT_FILE}" "${SRC_FILE}" || Error 4 "failed to compile '${SRC_FILE}' using ${CXX}"
 
 # Execute ouput file passing any extra command-line arguments
-"${TEMP_OUT_FILE}" ${@:2} || Error 5 "'${SRC_FILE}' failed with exit code $?"
+${VM} "${TEMP_OUT_FILE}" ${@:2} || Error 5 "'${SRC_FILE}' failed with exit code $?"
 
 # Exit with success
 Error 0
