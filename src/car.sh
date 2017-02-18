@@ -11,7 +11,7 @@ function usage()
 
 function error()
 {
-[ -n "${ORIGINAL_SRC_FILE_CONTENTS}" ] && echo "${ORIGINAL_SRC_FILE_CONTENTS}" > "${SRC_FILE}"
+  [ -n "${ORIGINAL_SRC_FILE_CONTENTS}" ] && echo "${ORIGINAL_SRC_FILE_CONTENTS}" > "${SRC_FILE}"
   [ -f "${TEMP_OUT_FILE}" ] && rm "${TEMP_OUT_FILE}"
   exit $1
 }
