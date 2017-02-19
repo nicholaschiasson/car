@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 
 # Variable defines
+CWD="${PWD}"
 SRC_FILE="$1"
 SRC_FILE_BASENAME=`basename "${SRC_FILE}"`
 TEMP_OUT_FILE=$(mktemp -q)
+TEMP_OUT_DIR=$(mktemp -qd)
 CXX=gcc
 CXX_OUTPUT_FLAG=-o
 VM=
+PRERUN=
+POSTRUN=
 
 if test -t 1; then
   ncolors=$(tput colors)
@@ -82,7 +86,8 @@ function Cleanup()
   # Put original source file contents back in case a shebang was removed
   [ -n "${ORIGINAL_SRC_FILE_CONTENTS}" ] && echo "${ORIGINAL_SRC_FILE_CONTENTS}" > "${SRC_FILE}"
   # Remove compilation output
-  [ -f "${TEMP_OUT_FILE}" ] && rm "${TEMP_OUT_FILE}"
+  rm -rf "${TEMP_OUT_FILE}"
+  rm -rf "${TEMP_OUT_DIR}"
 }
 
 function Error()
@@ -138,10 +143,23 @@ case "${SRC_FILE_BASENAME##*.}" in
     VM=mono
     ;;
   go)
-    # Using a trick for go, since there is a go command to compile and run, leaving no binaries
     CXX="go build"
     CXX_OUTPUT_FLAG="-o "
     VM=
+    ;;
+  java)
+    # Need to do some weird things for Java since the .class files need to have the same name as the class they contain.
+    # Also, Java programs need to be run from the root of their packages.
+    rm -rf "${TEMP_OUT_FILE}"
+    TEMP_OUT_FILE="${TEMP_OUT_DIR}"
+    CXX=javac
+    CXX_OUTPUT_FLAG="-d "
+    VM=java
+    JAVA_CLASS_NAME=${SRC_FILE%.java}
+    JAVA_PACKAGE=$(sed -n -e 's/^package \(.*\);$/\1/p' "${SRC_FILE}")
+    [ -n "${JAVA_PACKAGE}" ] && JAVA_PACKAGE="${JAVA_PACKAGE}."
+    PRERUN='cd "${TEMP_OUT_DIR}"; TEMP_OUT_FILE="${JAVA_PACKAGE}"$(basename "${JAVA_CLASS_NAME}")'
+    POSTRUN='cd "${CWD}"'
     ;;
   rs)
     CXX=rustc
@@ -155,8 +173,14 @@ esac
 # Perform compilation
 ${CXX} ${CXX_OUTPUT_FLAG}"${TEMP_OUT_FILE}" "${SRC_FILE}" || Error 4 "failed to compile '${SRC_FILE}' using ${CXX}"
 
+# Optional pre-run commands
+eval "${PRERUN}"
+
 # Execute ouput file passing any extra command-line arguments
 ${VM} "${TEMP_OUT_FILE}" ${@:2} || Error 5 "'${SRC_FILE}' failed with exit code $?"
+
+# Optional post-run commands
+eval "${POSTRUN}"
 
 # Exit with success
 Error 0
