@@ -33,6 +33,8 @@ Seemlessly execute files as if they were scripts, leaving no trace of binaries b
   ```
 - As mentioned, if you plan to execute the file using the *car* program explicitly, forget about the *shebang* and changing the file permissions.
 
+![](https://github.com/nicholaschiasson/car/raw/master/res/example_usage.gif)
+
 ## Supported Languages
 - C (GCC)
 - C++ (G++)
