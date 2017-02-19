@@ -96,7 +96,7 @@ function Error()
     ERROR_MESSAGE="$1"
   fi
 
-  [ -n "$ERROR_MESSAGE" ] && (>&2 echo  "car: "$(ColorEcho "${color_light_red}" error:)" ${ERROR_MESSAGE}")
+  [ -n "$ERROR_MESSAGE" ] && (>&2 echo "car: "$(ColorEcho "${color_light_red}" error:)" ${ERROR_MESSAGE}")
   exit $EXIT_CODE
 }
 

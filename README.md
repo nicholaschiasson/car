@@ -5,6 +5,13 @@ Command-line utility for quickly executing files containing code in a compiled l
 
 Seemlessly execute files as if they were scripts, leaving no trace of binaries behind.
 
+## Installation
+To install *car* enter the following command into a terminal:
+
+```
+sudo curl -sL "$(curl -s https://api.github.com/repos/nicholaschiasson/car/releases/latest | sed -n -e 's/^.*"browser_download_url": "\(.*\)"$/\1/p')" | sh
+```
+
 ## Usage
 - Add *car* to a local bin directory and make sure the directory is part of your ${PATH} environment variable.
 
