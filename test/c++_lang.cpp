@@ -1,6 +1,7 @@
 #!/usr/bin/env car
 
 #include <iostream>
+#include <cstdlib>
 
 using namespace std;
 
