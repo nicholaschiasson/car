@@ -19,10 +19,7 @@ before_install:
 - rm rustup.rs
 
 script:
-- mkdir bin
-- cp ./src/car.sh ./bin/car
-- chmod 755 ./bin/car
-- PATH="$PWD/bin:$PATH"
+- ./build/car_setup.sh
 - ./test/c_lang.c
 - ./test/c#_lang.cs
 - ./test/c++_lang.cc
@@ -30,3 +27,11 @@ script:
 - ./test/go_lang.go
 - ./test/java_lang.java
 - ./test/rust_lang.rs
+
+deploy:
+  provider: releases
+  api_key: 93dc5c91526cf7f58900b038af12c91db57e54ce
+  file: ./build/car_setup.sh
+  skip_cleanup: true
+  on:
+    tags: true
