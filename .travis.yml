@@ -22,3 +22,7 @@ script:
 - ./test/go_lang.go
 - ./test/java_lang.java
 - ./test/rust_lang.rs
+
+os:
+- linux
+- osx
