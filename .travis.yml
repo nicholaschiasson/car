@@ -3,7 +3,7 @@ language: bash
 before_install:
 - sudo apt-get clean
 - sudo apt-get update -qq
-- sudo apt-get install -f -y mono-devel
+- sudo apt-get install -qq -y mono-complete
 - curl https://sh.rustup.rs -sSf -o rustup.rs
 - chmod ugo+x rustup.rs
 - ./rustup.rs -y
