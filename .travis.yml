@@ -15,7 +15,7 @@ before_install:
 - source "$HOME/.cargo/env"
 - rm rustup.rs
 script:
-- ./build/car_setup.sh
+- sudo ./build/car_setup.sh
 - ./test/c_lang.c
 - ./test/c#_lang.cs
 - ./test/c++_lang.cc
