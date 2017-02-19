@@ -66,13 +66,7 @@ function IsColor
 
 function ColorEcho
 {
-  if [ -z "$1" ]; then
-    echo -e "ColorEcho: Invalid color <null> provided for first argument." >&2
-  elif [ $(IsColor "$1") != true ]; then
-    echo -e "ColorEcho: Invalid color '$1' provided for first argument." >&2
-  else
-    echo -e "$1$2$color_default"
-  fi
+  echo -e "$1$2$color_default"
 }
 
 function Usage()
