@@ -1,14 +1,14 @@
 language: bash
 
 script:
-  mkdir bin
-  cp ./src/car.sh ./bin/car
-  chmod 755 ./bin/car
-  PATH="$PWD/bin:$PATH"
-  ./test/c_lang.c
-  ./test/c#_lang.cs
-  ./test/c++_lang.cc
-  ./test/c++_lang.cpp
-  ./test/go_lang.go
-  ./test/java_lang.java
-  ./test/rust_lang.rs
+- mkdir bin
+- cp ./src/car.sh ./bin/car
+- chmod 755 ./bin/car
+- PATH="$PWD/bin:$PATH"
+- ./test/c_lang.c
+- ./test/c#_lang.cs
+- ./test/c++_lang.cc
+- ./test/c++_lang.cpp
+- ./test/go_lang.go
+- ./test/java_lang.java
+- ./test/rust_lang.rs
