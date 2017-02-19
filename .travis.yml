@@ -4,6 +4,7 @@ before_install:
 - curl https://sh.rustup.rs -sSf -o rustup.rs
 - chmod ugo+x rustup.rs
 - ./rustup.rs -y
+- source "$HOME/.cargo/env"
 - rm rustup.rs
 
 script:
