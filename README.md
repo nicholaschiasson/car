@@ -3,7 +3,7 @@ Compile and Run! Execute source files directly without worrying at all about com
 
 Command-line utility for quickly executing files containing code in a compiled language such as C, C++, Java, etc.
 
-Seemlessly execute files as if they were scripts, leaving no trace of binaries behind.
+Seamlessly execute files as if they were scripts, leaving no trace of binaries behind.
 
 ## Installation
 To install *car* enter the following command into a terminal:
