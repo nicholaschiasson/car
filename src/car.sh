@@ -4,6 +4,7 @@
 CWD="${PWD}"
 SRC_FILE="$1"
 SRC_FILE_BASENAME=`basename "${SRC_FILE}"`
+TEMP_SRC_FILE="${TMPDIR}/${SRC_FILE_BASENAME}"
 TEMP_OUT_FILE=$(mktemp -q)
 TEMP_OUT_DIR=$(mktemp -qd)
 CXX=gcc
@@ -77,9 +78,8 @@ function Usage()
 
 function Cleanup()
 {
-  # Put original source file contents back in case a shebang was removed
-  [ -n "${ORIGINAL_SRC_FILE_CONTENTS}" ] && echo "${ORIGINAL_SRC_FILE_CONTENTS}" > "${SRC_FILE}"
-  # Remove compilation output
+  # Remove cloned source file and compilation output
+  rm -rf "${TEMP_SRC_FILE}"
   rm -rf "${TEMP_OUT_FILE}"
   rm -rf "${TEMP_OUT_DIR}"
 }
@@ -114,10 +114,13 @@ function IsNumber()
 # Require source file
 ([ -n "${SRC_FILE}" ] && [ -f "${SRC_FILE}" ]) || Usage 1 "must provide <source-file>"
 
-# Look for shebang and remove it from original source, caching the original source to put back later
-ORIGINAL_SRC_FILE_CONTENTS=`cat "${SRC_FILE}"`
-NEW_SRC_FILE_CONTENTS=`sed -e 's/^#!.*$//g' "${SRC_FILE}"` || Error 2 "failed sed operation on '${SRC_FILE}'"
-echo "${NEW_SRC_FILE_CONTENTS}" > "${SRC_FILE}"
+# Copy source file contents to temp source file
+rm -rf "${TEMP_SRC_FILE}"
+cp -f "${SRC_FILE}" "${TEMP_SRC_FILE}"
+
+# Look for shebang and remove it from temp source
+NEW_SRC_FILE_CONTENTS=`sed -e 's/^#!.*$//g' "${TEMP_SRC_FILE}"` || Error 2 "failed sed operation on '${TEMP_SRC_FILE}'"
+echo "${NEW_SRC_FILE_CONTENTS}" > "${TEMP_SRC_FILE}"
 
 # Determine compiler to use based on file extension
 case "${SRC_FILE_BASENAME##*.}" in
@@ -149,8 +152,8 @@ case "${SRC_FILE_BASENAME##*.}" in
     CXX=javac
     CXX_OUTPUT_FLAG="-d "
     VM=java
-    JAVA_CLASS_NAME=${SRC_FILE%.java}
-    JAVA_PACKAGE=$(sed -n -e 's/^package \(.*\);$/\1/p' "${SRC_FILE}")
+    JAVA_CLASS_NAME=${TEMP_SRC_FILE%.java}
+    JAVA_PACKAGE=$(sed -n -e 's/^package \(.*\);$/\1/p' "${TEMP_SRC_FILE}")
     [ -n "${JAVA_PACKAGE}" ] && JAVA_PACKAGE="${JAVA_PACKAGE}."
     PRERUN='cd "${TEMP_OUT_DIR}"; TEMP_OUT_FILE="${JAVA_PACKAGE}"$(basename "${JAVA_CLASS_NAME}")'
     POSTRUN='cd "${CWD}"'
@@ -165,13 +168,13 @@ case "${SRC_FILE_BASENAME##*.}" in
 esac
 
 # Perform compilation
-${CXX} ${CXX_OUTPUT_FLAG}"${TEMP_OUT_FILE}" "${SRC_FILE}" || Error 4 "failed to compile '${SRC_FILE}' using ${CXX}"
+${CXX} ${CXX_OUTPUT_FLAG}"${TEMP_OUT_FILE}" "${TEMP_SRC_FILE}" || Error 4 "failed to compile '${TEMP_SRC_FILE}' using ${CXX}"
 
 # Optional pre-run commands
 eval "${PRERUN}"
 
 # Execute ouput file passing any extra command-line arguments
-${VM} "${TEMP_OUT_FILE}" ${@:2} || Error 5 "'${SRC_FILE}' failed with exit code $?"
+${VM} "${TEMP_OUT_FILE}" ${@:2} || Error 5 "'${TEMP_SRC_FILE}' failed with exit code $?"
 
 # Optional post-run commands
 eval "${POSTRUN}"
