@@ -4,9 +4,9 @@
 CWD="${PWD}"
 SRC_FILE="$1"
 SRC_FILE_BASENAME=`basename "${SRC_FILE}"`
-TEMP_SRC_FILE="${TMPDIR}/${SRC_FILE_BASENAME}"
 TEMP_OUT_FILE=$(mktemp -q)
 TEMP_OUT_DIR=$(mktemp -qd)
+TEMP_SRC_FILE="${TEMP_OUT_DIR}/${SRC_FILE_BASENAME}"
 CXX=gcc
 CXX_OUTPUT_FLAG=-o
 VM=
@@ -119,7 +119,7 @@ rm -rf "${TEMP_SRC_FILE}"
 cp -f "${SRC_FILE}" "${TEMP_SRC_FILE}"
 
 # Look for shebang and remove it from temp source
-NEW_SRC_FILE_CONTENTS=`sed -e 's/^#!.*$//g' "${TEMP_SRC_FILE}"` || Error 2 "failed sed operation on '${TEMP_SRC_FILE}'"
+NEW_SRC_FILE_CONTENTS=`sed -e 's/^#!.*$//g' "${TEMP_SRC_FILE}"` || Error 2 "failed sed operation on '${SRC_FILE_BASENAME}'"
 echo "${NEW_SRC_FILE_CONTENTS}" > "${TEMP_SRC_FILE}"
 
 # Determine compiler to use based on file extension
@@ -168,13 +168,13 @@ case "${SRC_FILE_BASENAME##*.}" in
 esac
 
 # Perform compilation
-${CXX} ${CXX_OUTPUT_FLAG}"${TEMP_OUT_FILE}" "${TEMP_SRC_FILE}" || Error 4 "failed to compile '${TEMP_SRC_FILE}' using ${CXX}"
+${CXX} ${CXX_OUTPUT_FLAG}"${TEMP_OUT_FILE}" "${TEMP_SRC_FILE}" || Error 4 "failed to compile '${SRC_FILE_BASENAME}' using ${CXX}"
 
 # Optional pre-run commands
 eval "${PRERUN}"
 
 # Execute ouput file passing any extra command-line arguments
-${VM} "${TEMP_OUT_FILE}" ${@:2} || Error 5 "'${TEMP_SRC_FILE}' failed with exit code $?"
+${VM} "${TEMP_OUT_FILE}" ${@:2} || Error 5 "'${SRC_FILE_BASENAME}' failed with exit code $?"
 
 # Optional post-run commands
 eval "${POSTRUN}"
