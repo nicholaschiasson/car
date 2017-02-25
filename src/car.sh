@@ -3,7 +3,7 @@
 # Variable defines
 CWD="${PWD}"
 SRC_FILE="$1"
-SRC_FILE_BASENAME=`basename "${SRC_FILE}"`
+SRC_FILE_BASENAME=$(basename "${SRC_FILE}" 2> /dev/null)
 TEMP_OUT_FILE=$(mktemp -q)
 TEMP_OUT_DIR=$(mktemp -qd)
 TEMP_SRC_FILE="${TEMP_OUT_DIR}/${SRC_FILE_BASENAME}"
@@ -111,8 +111,14 @@ function IsNumber()
 
 ## Begin main procedure
 
+# TODO: Parse arguments using getopts
+# Accept -h argument for usage
+if [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
+  Usage 0
+fi
+
 # Require source file
-([ -n "${SRC_FILE}" ] && [ -f "${SRC_FILE}" ]) || Usage 1 "must provide <source-file>"
+([ -n "${SRC_FILE}" ] && [ -f "${SRC_FILE}" ]) || Usage 1 "must provide valid <source-file>"
 
 # Copy source file contents to temp source file
 rm -rf "${TEMP_SRC_FILE}"
