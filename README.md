@@ -50,6 +50,13 @@ sudo curl -sL "$(curl -s https://api.github.com/repos/nicholaschiasson/car/relea
 - Java
 - Rust
 
+## Supported Operating Systems
+- Linux
+- Mac OS X
+- Windows? (Windows subsystem for Linux)
+  - Untested, but presumably the script should work on any Bash shell on a system that is supported by the compilers listed above, so my bet is that Windows is fair game (even though it's not really Windows...)
+  - Could maybe get it to work on Cygwin or MinGW too
+
 ## Notes
 *car* is only a shell script; it does not ship with the capability to compile source on its own.
 
