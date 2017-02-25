@@ -15,7 +15,7 @@ before_install:
 - source "$HOME/.cargo/env"
 - rm rustup.rs
 script:
-- sudo ./build/car_setup.sh
+- sudo ./install/car_setup.sh
 - ./test/c_lang.c
 - ./test/c#_lang.cs
 - ./test/c++_lang.cc
@@ -28,7 +28,7 @@ deploy:
   provider: releases
   api_key:
     secure: OtZh47dw1JTJBQuvH/MwiWxQt69IR2lHZw2frGBkSA8B3lr1sg9VelNTH04sduUYVvii+3/fcFaXnGGQyI7qMMQf6e3q776ZO9r6l53+L2joZVSG8rYcC6z9Oih8FpZHpEOWnShvURKvx5wlD1Vb6y2QR1B2M5g43tCeeDdGB0S/EoZsxgBmAp/Axu3wK//8ueuLbvG+9f5ad1EhMVF/wonzF0uXr5tjCi+UmCyW6f0GnBVbAxcVlUBbKFB2+T1LBDeENVrxLHDbEn68BCYD4e7JHIRPZLiJ2t1jUFvjcOWFJlvWG7VYx1KWxue1KomcFTA1WZ+Zfb51969jGgJ1+2mCc/TVR9quwihs84ACoJIhUHVQ/TNuw13nnlJhWy8x2jjeomxdkgIF6r5JfvrZeUxR4n/lX6KMUnWMwaGFE2+VbrEFzfCtsotVIf7/lQRZZmLm7f/K2SLQUMWJ56ltdAFr3tkMJ/OeTecl88I+lNB7E3DUR/78LPb9DbkL9FmE7ASbjSsXTGnwqFgHGtej9bQXKmTBd130VGNxp9+XVw0TiWSjkNb6rhzpo+S/teDHNqa2KNmV6lyjL+v5C72BB/6LkltLLKdR4lhVoBKtuhHte8ipwC7aJjqlHkmrxoOZyHb8ZJExxJXWzZyUzWjdQNojZehcVJPpZD8/O/sU+Sk=
-  file: ./build/car_setup.sh
+  file: ./install/car_setup.sh
   skip_cleanup: true
   on:
     repo: nicholaschiasson/car
