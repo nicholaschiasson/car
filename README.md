@@ -1,4 +1,6 @@
-# car [![Build Status](https://travis-ci.org/nicholaschiasson/car.svg?branch=master)](https://travis-ci.org/nicholaschiasson/car)
+# car
+[![Build Status](https://travis-ci.org/nicholaschiasson/car.svg?branch=master)](https://travis-ci.org/nicholaschiasson/car)
+
 Compile and Run! Execute source files directly without worrying at all about compiling.
 
 Command-line utility for quickly executing files containing code in a compiled language such as C, C++, Java, etc.
