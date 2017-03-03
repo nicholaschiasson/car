@@ -13,15 +13,7 @@ sudo curl -sL "$(curl -s https://api.github.com/repos/nicholaschiasson/car/relea
 ```
 
 ## Usage
-- Add *car* to a local bin directory and make sure the directory is part of your ${PATH} environment variable.
-
-  ```
-  mkdir -p "${HOME}/bin"
-  mv "${HOME}/Downloads/car.sh" "${HOME}/bin/car"
-  PATH="${HOME}/bin:${PATH}"
-  ```
-
-  For ease of use, paste that last line into your ```~/.profile``` or ```~/.bashrc``` or wherever makes the most sense (do some googling if you don't know what I'm talking about).
+- Make sure that the containing directory of *car* is present in your ${PATH} environment variable
 - Write some code (check out the supported languages below)
 - Unless you want to execute your file explicitly using ```car example.c```, add a *shebang* to the top of your source file like so:
 
